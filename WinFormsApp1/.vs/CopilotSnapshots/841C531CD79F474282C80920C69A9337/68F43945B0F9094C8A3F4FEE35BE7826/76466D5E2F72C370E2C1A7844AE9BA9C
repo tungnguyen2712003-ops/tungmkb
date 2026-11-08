@@ -1,0 +1,160 @@
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
+
+namespace WinFormsApp1.Controls
+{
+    // A simple two-position toggle switch (Left/Right)
+    public class TwoPositionSwitch : UserControl
+    {
+        private bool isOn; // true = Right position, false = Left position
+
+        public event EventHandler? Toggled;
+
+        public TwoPositionSwitch()
+        {
+            DoubleBuffered = true;
+            Height = 28;
+            Width = 60;
+            BackColor = Color.Transparent;
+            OnColor = Color.FromArgb(0, 150, 136);
+            OffColor = Color.FromArgb(189, 189, 189);
+            KnobColor = Color.White;
+            LeftText = "Off";
+            RightText = "On";
+            Cursor = Cursors.Hand;
+            TabStop = true;
+        }
+
+        [Category("Appearance")]
+        [Description("Left position text")]
+        public string LeftText { get; set; }
+
+        [Category("Appearance")]
+        [Description("Right position text")]
+        public string RightText { get; set; }
+
+        [Category("Appearance")]
+        [Description("Color when in the On/Right position")]
+        public Color OnColor { get; set; }
+
+        [Category("Appearance")]
+        [Description("Color when in the Off/Left position")]
+        public Color OffColor { get; set; }
+
+        [Category("Appearance")]
+        [Description("Knob color")]
+        public Color KnobColor { get; set; }
+
+        [Category("Behavior")]
+        [Description("Current position. True = Right/On, False = Left/Off")]
+        public bool Position
+        {
+            get => isOn;
+            set
+            {
+                if (isOn == value) return;
+                isOn = value;
+                Invalidate();
+                Toggled?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            var rect = ClientRectangle;
+            rect.Inflate(-2, -4);
+
+            // background
+            using (var bgBrush = new LinearGradientBrush(rect, isOn ? OnColor : OffColor, ControlPaint.Dark(isOn ? OnColor : OffColor), 90f))
+            using (var pen = new Pen(Color.FromArgb(120, Color.Black)))
+            {
+                var radius = rect.Height / 2;
+                using (var path = RoundedRect(rect, radius))
+                {
+                    e.Graphics.FillPath(bgBrush, path);
+                    e.Graphics.DrawPath(pen, path);
+                }
+            }
+
+            // knob
+            int knobSize = rect.Height - 4;
+            int knobY = rect.Top + 2;
+            int knobX = isOn ? rect.Right - knobSize - 2 : rect.Left + 2;
+
+            var knobRect = new Rectangle(knobX, knobY, knobSize, knobSize);
+            using (var brush = new SolidBrush(KnobColor))
+            using (var pen = new Pen(Color.FromArgb(100, Color.Black)))
+            using (var gp = new GraphicsPath())
+            {
+                gp.AddEllipse(knobRect);
+                e.Graphics.FillPath(brush, gp);
+                e.Graphics.DrawPath(pen, gp);
+            }
+
+            // text
+            var sf = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            var leftRect = new Rectangle(rect.Left + 2, rect.Top, rect.Width / 2 - 2, rect.Height);
+            var rightRect = new Rectangle(rect.Left + rect.Width / 2, rect.Top, rect.Width / 2 - 2, rect.Height);
+
+            using (var textBrush = new SolidBrush(Color.White))
+            using (var font = new Font(Font.FontFamily, 8f, FontStyle.Regular))
+            {
+                e.Graphics.DrawString(LeftText, font, textBrush, leftRect, sf);
+                e.Graphics.DrawString(RightText, font, textBrush, rightRect, sf);
+            }
+        }
+
+        private GraphicsPath RoundedRect(Rectangle bounds, int radius)
+        {
+            var path = new GraphicsPath();
+            int diameter = radius * 2;
+            var arc = new Rectangle(bounds.Location, new Size(diameter, diameter));
+
+            // top left
+            path.AddArc(arc, 180, 90);
+            // top right
+            arc.X = bounds.Right - diameter;
+            path.AddArc(arc, 270, 90);
+            // bottom right
+            arc.Y = bounds.Bottom - diameter;
+            path.AddArc(arc, 0, 90);
+            // bottom left
+            arc.X = bounds.Left;
+            path.AddArc(arc, 90, 90);
+            path.CloseFigure();
+            return path;
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            Toggle();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Enter)
+            {
+                Toggle();
+                e.Handled = true;
+            }
+        }
+
+        private void Toggle()
+        {
+            Position = !Position;
+        }
+    }
+}

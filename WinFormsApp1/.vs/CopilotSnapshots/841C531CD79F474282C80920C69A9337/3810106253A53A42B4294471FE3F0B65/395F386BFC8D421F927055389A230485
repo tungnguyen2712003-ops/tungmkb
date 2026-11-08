@@ -1,0 +1,347 @@
+﻿namespace WinFormsApp1
+{
+    partial class Form1
+    {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        ///  Required method for Designer support - do not modify
+        ///  the contents of this method with the code editor.
+        /// </summary>
+        // Controls for three servos
+        private System.Windows.Forms.GroupBox groupServo1;
+        private System.Windows.Forms.GroupBox groupServo2;
+        private System.Windows.Forms.GroupBox groupServo3;
+
+        private System.Windows.Forms.RadioButton radio1Manual;
+        private System.Windows.Forms.RadioButton radio1Jog;
+        private System.Windows.Forms.RadioButton radio1Auto;
+        private System.Windows.Forms.NumericUpDown num1Manual;
+        private System.Windows.Forms.Button btn1Move;
+        private System.Windows.Forms.Button btn1JogMinus;
+        private System.Windows.Forms.Button btn1JogPlus;
+        private System.Windows.Forms.Button btn1AutoStart;
+        private System.Windows.Forms.Button btn1AutoStop;
+        private System.Windows.Forms.Label lbl1Pos;
+
+        private System.Windows.Forms.RadioButton radio2Manual;
+        private System.Windows.Forms.RadioButton radio2Jog;
+        private System.Windows.Forms.RadioButton radio2Auto;
+        private System.Windows.Forms.NumericUpDown num2Manual;
+        private System.Windows.Forms.Button btn2Move;
+        private System.Windows.Forms.Button btn2JogMinus;
+        private System.Windows.Forms.Button btn2JogPlus;
+        private System.Windows.Forms.Button btn2AutoStart;
+        private System.Windows.Forms.Button btn2AutoStop;
+        private System.Windows.Forms.Label lbl2Pos;
+
+        private System.Windows.Forms.RadioButton radio3Manual;
+        private System.Windows.Forms.RadioButton radio3Jog;
+        private System.Windows.Forms.RadioButton radio3Auto;
+        private System.Windows.Forms.NumericUpDown num3Manual;
+        private System.Windows.Forms.Button btn3Move;
+        private System.Windows.Forms.Button btn3JogMinus;
+        private System.Windows.Forms.Button btn3JogPlus;
+        private System.Windows.Forms.Button btn3AutoStart;
+        private System.Windows.Forms.Button btn3AutoStop;
+        private System.Windows.Forms.Label lbl3Pos;
+
+        private System.Windows.Forms.Timer autoTimer;
+
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+            this.groupServo1 = new System.Windows.Forms.GroupBox();
+            this.radio1Manual = new System.Windows.Forms.RadioButton();
+            this.radio1Jog = new System.Windows.Forms.RadioButton();
+            this.radio1Auto = new System.Windows.Forms.RadioButton();
+            this.num1Manual = new System.Windows.Forms.NumericUpDown();
+            this.btn1Move = new System.Windows.Forms.Button();
+            this.btn1JogMinus = new System.Windows.Forms.Button();
+            this.btn1JogPlus = new System.Windows.Forms.Button();
+            this.btn1AutoStart = new System.Windows.Forms.Button();
+            this.btn1AutoStop = new System.Windows.Forms.Button();
+            this.lbl1Pos = new System.Windows.Forms.Label();
+
+            this.groupServo2 = new System.Windows.Forms.GroupBox();
+            this.radio2Manual = new System.Windows.Forms.RadioButton();
+            this.radio2Jog = new System.Windows.Forms.RadioButton();
+            this.radio2Auto = new System.Windows.Forms.RadioButton();
+            this.num2Manual = new System.Windows.Forms.NumericUpDown();
+            this.btn2Move = new System.Windows.Forms.Button();
+            this.btn2JogMinus = new System.Windows.Forms.Button();
+            this.btn2JogPlus = new System.Windows.Forms.Button();
+            this.btn2AutoStart = new System.Windows.Forms.Button();
+            this.btn2AutoStop = new System.Windows.Forms.Button();
+            this.lbl2Pos = new System.Windows.Forms.Label();
+
+            this.groupServo3 = new System.Windows.Forms.GroupBox();
+            this.radio3Manual = new System.Windows.Forms.RadioButton();
+            this.radio3Jog = new System.Windows.Forms.RadioButton();
+            this.radio3Auto = new System.Windows.Forms.RadioButton();
+            this.num3Manual = new System.Windows.Forms.NumericUpDown();
+            this.btn3Move = new System.Windows.Forms.Button();
+            this.btn3JogMinus = new System.Windows.Forms.Button();
+            this.btn3JogPlus = new System.Windows.Forms.Button();
+            this.btn3AutoStart = new System.Windows.Forms.Button();
+            this.btn3AutoStop = new System.Windows.Forms.Button();
+            this.lbl3Pos = new System.Windows.Forms.Label();
+
+            this.autoTimer = new System.Windows.Forms.Timer(this.components);
+
+            SuspendLayout();
+            // 
+            // groupServo1
+            // 
+            this.groupServo1.Location = new System.Drawing.Point(12, 12);
+            this.groupServo1.Name = "groupServo1";
+            this.groupServo1.Size = new System.Drawing.Size(250, 130);
+            this.groupServo1.TabIndex = 0;
+            this.groupServo1.TabStop = false;
+            this.groupServo1.Text = "Servo 1";
+            // controls inside group 1
+            this.radio1Manual.Location = new System.Drawing.Point(10, 22);
+            this.radio1Manual.Text = "Manual";
+            this.radio1Manual.AutoSize = true;
+            this.radio1Manual.Checked = true;
+            this.radio1Manual.CheckedChanged += this.radio1Mode_CheckedChanged;
+
+            this.radio1Jog.Location = new System.Drawing.Point(80, 22);
+            this.radio1Jog.Text = "Jog";
+            this.radio1Jog.AutoSize = true;
+            this.radio1Jog.CheckedChanged += this.radio1Mode_CheckedChanged;
+
+            this.radio1Auto.Location = new System.Drawing.Point(140, 22);
+            this.radio1Auto.Text = "Auto";
+            this.radio1Auto.AutoSize = true;
+            this.radio1Auto.CheckedChanged += this.radio1Mode_CheckedChanged;
+
+            this.num1Manual.Location = new System.Drawing.Point(10, 50);
+            this.num1Manual.Minimum = -1000;
+            this.num1Manual.Maximum = 1000;
+            this.num1Manual.Size = new System.Drawing.Size(80, 23);
+
+            this.btn1Move.Location = new System.Drawing.Point(100, 50);
+            this.btn1Move.Size = new System.Drawing.Size(75, 23);
+            this.btn1Move.Text = "Move";
+            this.btn1Move.Click += this.btn1Move_Click;
+
+            this.btn1JogMinus.Location = new System.Drawing.Point(10, 80);
+            this.btn1JogMinus.Size = new System.Drawing.Size(50, 23);
+            this.btn1JogMinus.Text = "Jog -";
+            this.btn1JogMinus.Click += this.btn1JogMinus_Click;
+
+            this.btn1JogPlus.Location = new System.Drawing.Point(70, 80);
+            this.btn1JogPlus.Size = new System.Drawing.Size(50, 23);
+            this.btn1JogPlus.Text = "Jog +";
+            this.btn1JogPlus.Click += this.btn1JogPlus_Click;
+
+            this.btn1AutoStart.Location = new System.Drawing.Point(130, 80);
+            this.btn1AutoStart.Size = new System.Drawing.Size(50, 23);
+            this.btn1AutoStart.Text = "Start";
+            this.btn1AutoStart.Click += this.btn1AutoStart_Click;
+
+            this.btn1AutoStop.Location = new System.Drawing.Point(190, 80);
+            this.btn1AutoStop.Size = new System.Drawing.Size(50, 23);
+            this.btn1AutoStop.Text = "Stop";
+            this.btn1AutoStop.Click += this.btn1AutoStop_Click;
+
+            this.lbl1Pos.Location = new System.Drawing.Point(180, 50);
+            this.lbl1Pos.Size = new System.Drawing.Size(60, 23);
+            this.lbl1Pos.Text = "Pos: 0.0";
+
+            this.groupServo1.Controls.Add(this.radio1Manual);
+            this.groupServo1.Controls.Add(this.radio1Jog);
+            this.groupServo1.Controls.Add(this.radio1Auto);
+            this.groupServo1.Controls.Add(this.num1Manual);
+            this.groupServo1.Controls.Add(this.btn1Move);
+            this.groupServo1.Controls.Add(this.btn1JogMinus);
+            this.groupServo1.Controls.Add(this.btn1JogPlus);
+            this.groupServo1.Controls.Add(this.btn1AutoStart);
+            this.groupServo1.Controls.Add(this.btn1AutoStop);
+            this.groupServo1.Controls.Add(this.lbl1Pos);
+
+            // 
+            // groupServo2
+            // 
+            this.groupServo2.Location = new System.Drawing.Point(12, 150);
+            this.groupServo2.Name = "groupServo2";
+            this.groupServo2.Size = new System.Drawing.Size(250, 130);
+            this.groupServo2.TabIndex = 1;
+            this.groupServo2.TabStop = false;
+            this.groupServo2.Text = "Servo 2";
+
+            this.radio2Manual.Location = new System.Drawing.Point(10, 22);
+            this.radio2Manual.Text = "Manual";
+            this.radio2Manual.AutoSize = true;
+            this.radio2Manual.Checked = true;
+            this.radio2Manual.CheckedChanged += this.radio2Mode_CheckedChanged;
+
+            this.radio2Jog.Location = new System.Drawing.Point(80, 22);
+            this.radio2Jog.Text = "Jog";
+            this.radio2Jog.AutoSize = true;
+            this.radio2Jog.CheckedChanged += this.radio2Mode_CheckedChanged;
+
+            this.radio2Auto.Location = new System.Drawing.Point(140, 22);
+            this.radio2Auto.Text = "Auto";
+            this.radio2Auto.AutoSize = true;
+            this.radio2Auto.CheckedChanged += this.radio2Mode_CheckedChanged;
+
+            this.num2Manual.Location = new System.Drawing.Point(10, 50);
+            this.num2Manual.Minimum = -1000;
+            this.num2Manual.Maximum = 1000;
+            this.num2Manual.Size = new System.Drawing.Size(80, 23);
+
+            this.btn2Move.Location = new System.Drawing.Point(100, 50);
+            this.btn2Move.Size = new System.Drawing.Size(75, 23);
+            this.btn2Move.Text = "Move";
+            this.btn2Move.Click += this.btn2Move_Click;
+
+            this.btn2JogMinus.Location = new System.Drawing.Point(10, 80);
+            this.btn2JogMinus.Size = new System.Drawing.Size(50, 23);
+            this.btn2JogMinus.Text = "Jog -";
+            this.btn2JogMinus.Click += this.btn2JogMinus_Click;
+
+            this.btn2JogPlus.Location = new System.Drawing.Point(70, 80);
+            this.btn2JogPlus.Size = new System.Drawing.Size(50, 23);
+            this.btn2JogPlus.Text = "Jog +";
+            this.btn2JogPlus.Click += this.btn2JogPlus_Click;
+
+            this.btn2AutoStart.Location = new System.Drawing.Point(130, 80);
+            this.btn2AutoStart.Size = new System.Drawing.Size(50, 23);
+            this.btn2AutoStart.Text = "Start";
+            this.btn2AutoStart.Click += this.btn2AutoStart_Click;
+
+            this.btn2AutoStop.Location = new System.Drawing.Point(190, 80);
+            this.btn2AutoStop.Size = new System.Drawing.Size(50, 23);
+            this.btn2AutoStop.Text = "Stop";
+            this.btn2AutoStop.Click += this.btn2AutoStop_Click;
+
+            this.lbl2Pos.Location = new System.Drawing.Point(180, 50);
+            this.lbl2Pos.Size = new System.Drawing.Size(60, 23);
+            this.lbl2Pos.Text = "Pos: 0.0";
+
+            this.groupServo2.Controls.Add(this.radio2Manual);
+            this.groupServo2.Controls.Add(this.radio2Jog);
+            this.groupServo2.Controls.Add(this.radio2Auto);
+            this.groupServo2.Controls.Add(this.num2Manual);
+            this.groupServo2.Controls.Add(this.btn2Move);
+            this.groupServo2.Controls.Add(this.btn2JogMinus);
+            this.groupServo2.Controls.Add(this.btn2JogPlus);
+            this.groupServo2.Controls.Add(this.btn2AutoStart);
+            this.groupServo2.Controls.Add(this.btn2AutoStop);
+            this.groupServo2.Controls.Add(this.lbl2Pos);
+
+            // 
+            // groupServo3
+            // 
+            this.groupServo3.Location = new System.Drawing.Point(12, 288);
+            this.groupServo3.Name = "groupServo3";
+            this.groupServo3.Size = new System.Drawing.Size(250, 130);
+            this.groupServo3.TabIndex = 2;
+            this.groupServo3.TabStop = false;
+            this.groupServo3.Text = "Servo 3";
+
+            this.radio3Manual.Location = new System.Drawing.Point(10, 22);
+            this.radio3Manual.Text = "Manual";
+            this.radio3Manual.AutoSize = true;
+            this.radio3Manual.Checked = true;
+            this.radio3Manual.CheckedChanged += this.radio3Mode_CheckedChanged;
+
+            this.radio3Jog.Location = new System.Drawing.Point(80, 22);
+            this.radio3Jog.Text = "Jog";
+            this.radio3Jog.AutoSize = true;
+            this.radio3Jog.CheckedChanged += this.radio3Mode_CheckedChanged;
+
+            this.radio3Auto.Location = new System.Drawing.Point(140, 22);
+            this.radio3Auto.Text = "Auto";
+            this.radio3Auto.AutoSize = true;
+            this.radio3Auto.CheckedChanged += this.radio3Mode_CheckedChanged;
+
+            this.num3Manual.Location = new System.Drawing.Point(10, 50);
+            this.num3Manual.Minimum = -1000;
+            this.num3Manual.Maximum = 1000;
+            this.num3Manual.Size = new System.Drawing.Size(80, 23);
+
+            this.btn3Move.Location = new System.Drawing.Point(100, 50);
+            this.btn3Move.Size = new System.Drawing.Size(75, 23);
+            this.btn3Move.Text = "Move";
+            this.btn3Move.Click += this.btn3Move_Click;
+
+            this.btn3JogMinus.Location = new System.Drawing.Point(10, 80);
+            this.btn3JogMinus.Size = new System.Drawing.Size(50, 23);
+            this.btn3JogMinus.Text = "Jog -";
+            this.btn3JogMinus.Click += this.btn3JogMinus_Click;
+
+            this.btn3JogPlus.Location = new System.Drawing.Point(70, 80);
+            this.btn3JogPlus.Size = new System.Drawing.Size(50, 23);
+            this.btn3JogPlus.Text = "Jog +";
+            this.btn3JogPlus.Click += this.btn3JogPlus_Click;
+
+            this.btn3AutoStart.Location = new System.Drawing.Point(130, 80);
+            this.btn3AutoStart.Size = new System.Drawing.Size(50, 23);
+            this.btn3AutoStart.Text = "Start";
+            this.btn3AutoStart.Click += this.btn3AutoStart_Click;
+
+            this.btn3AutoStop.Location = new System.Drawing.Point(190, 80);
+            this.btn3AutoStop.Size = new System.Drawing.Size(50, 23);
+            this.btn3AutoStop.Text = "Stop";
+            this.btn3AutoStop.Click += this.btn3AutoStop_Click;
+
+            this.lbl3Pos.Location = new System.Drawing.Point(180, 50);
+            this.lbl3Pos.Size = new System.Drawing.Size(60, 23);
+            this.lbl3Pos.Text = "Pos: 0.0";
+
+            this.groupServo3.Controls.Add(this.radio3Manual);
+            this.groupServo3.Controls.Add(this.radio3Jog);
+            this.groupServo3.Controls.Add(this.radio3Auto);
+            this.groupServo3.Controls.Add(this.num3Manual);
+            this.groupServo3.Controls.Add(this.btn3Move);
+            this.groupServo3.Controls.Add(this.btn3JogMinus);
+            this.groupServo3.Controls.Add(this.btn3JogPlus);
+            this.groupServo3.Controls.Add(this.btn3AutoStart);
+            this.groupServo3.Controls.Add(this.btn3AutoStop);
+            this.groupServo3.Controls.Add(this.lbl3Pos);
+
+            // 
+            // autoTimer
+            // 
+            this.autoTimer.Interval = 200; // ms
+            this.autoTimer.Tick += new System.EventHandler(this.autoTimer_Tick);
+
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(800, 450);
+            Controls.Add(this.groupServo1);
+            Controls.Add(this.groupServo2);
+            Controls.Add(this.groupServo3);
+            Name = "Form1";
+            Text = "Servo Control";
+            Load += Form1_Load;
+            ResumeLayout(false);
+        }
+
+        #endregion
+    }
+}

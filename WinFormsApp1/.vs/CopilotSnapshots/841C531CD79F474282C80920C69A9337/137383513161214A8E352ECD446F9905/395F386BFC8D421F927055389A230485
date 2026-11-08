@@ -1,0 +1,126 @@
+﻿namespace WinFormsApp1
+{
+    partial class Form1
+    {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        ///  Required method for Designer support - do not modify
+        ///  the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            stylishButton1 = new WinFormsApp1.Controls.StylishButton();
+            stylishButton2 = new WinFormsApp1.Controls.StylishButton();
+            floatingLabelTextBox1 = new WinFormsApp1.Controls.FloatingLabelTextBox();
+            stylishButton3 = new WinFormsApp1.Controls.StylishButton();
+            toggleSwitch1 = new WinFormsApp1.Controls.ToggleSwitch();
+            SuspendLayout();
+            // 
+            // stylishButton1
+            // 
+            stylishButton1.BackColor = Color.Transparent;
+            stylishButton1.ButtonText = "Button";
+            stylishButton1.ExpandedWidth = 240;
+            stylishButton1.ExpandOnHover = false;
+            stylishButton1.FillColor = Color.Red;
+            stylishButton1.Font = new Font("Times New Roman", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            stylishButton1.ForeColor = Color.White;
+            stylishButton1.IsDraggable = false;
+            stylishButton1.Location = new Point(1394, 981);
+            stylishButton1.Name = "stylishButton1";
+            stylishButton1.OriginalWidth = 120;
+            stylishButton1.Size = new Size(77, 21);
+            stylishButton1.TabIndex = 0;
+            // 
+            // stylishButton2
+            // 
+            stylishButton2.BackColor = Color.Transparent;
+            stylishButton2.ButtonText = "Button";
+            stylishButton2.ExpandedWidth = 240;
+            stylishButton2.ExpandOnHover = false;
+            stylishButton2.FillColor = Color.Red;
+            stylishButton2.Font = new Font("Times New Roman", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            stylishButton2.ForeColor = Color.White;
+            stylishButton2.IsDraggable = false;
+            stylishButton2.Location = new Point(1394, 1008);
+            stylishButton2.Name = "stylishButton2";
+            stylishButton2.OriginalWidth = 120;
+            stylishButton2.Size = new Size(77, 21);
+            stylishButton2.TabIndex = 1;
+            // 
+            // floatingLabelTextBox1
+            // 
+            floatingLabelTextBox1.FloatingText = "Speed";
+            floatingLabelTextBox1.Location = new Point(567, 96);
+            floatingLabelTextBox1.Name = "floatingLabelTextBox1";
+            floatingLabelTextBox1.Padding = new Padding(2);
+            floatingLabelTextBox1.Size = new Size(86, 44);
+            floatingLabelTextBox1.TabIndex = 2;
+            // 
+            // stylishButton3
+            // 
+            stylishButton3.BackColor = Color.Transparent;
+            stylishButton3.ButtonText = "Button";
+            stylishButton3.ExpandedWidth = 240;
+            stylishButton3.ExpandOnHover = false;
+            stylishButton3.FillColor = Color.FromArgb(30, 144, 255);
+            stylishButton3.Font = new Font("Segoe UI", 9F);
+            stylishButton3.ForeColor = Color.White;
+            stylishButton3.IsDraggable = false;
+            stylishButton3.Location = new Point(801, 121);
+            stylishButton3.Name = "stylishButton3";
+            stylishButton3.OriginalWidth = 120;
+            stylishButton3.Size = new Size(120, 40);
+            stylishButton3.TabIndex = 3;
+            // 
+            // toggleSwitch1
+            // 
+            toggleSwitch1.Location = new Point(1016, 137);
+            toggleSwitch1.Name = "toggleSwitch1";
+            toggleSwitch1.Size = new Size(60, 28);
+            toggleSwitch1.TabIndex = 4;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1904, 1041);
+            Controls.Add(toggleSwitch1);
+            Controls.Add(stylishButton3);
+            Controls.Add(floatingLabelTextBox1);
+            Controls.Add(stylishButton2);
+            Controls.Add(stylishButton1);
+            Name = "Form1";
+            Text = "Form1";
+            Load += Form1_Load;
+            ResumeLayout(false);
+        }
+
+        #endregion
+
+        private Controls.StylishButton stylishButton1;
+        private Controls.StylishButton stylishButton2;
+        private Controls.FloatingLabelTextBox floatingLabelTextBox1;
+        private Controls.StylishButton stylishButton3;
+        private Controls.ToggleSwitch toggleSwitch1;
+    }
+}

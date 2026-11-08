@@ -1,0 +1,48 @@
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+
+namespace WinFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // read hardware.yaml if it exists at the repository path specified by the user
+            var path = @"C:\Users\tungn\source\repos\WinFormsApp1\WinFormsApp1\hardware.yaml";
+            try
+            {
+                if (File.Exists(path))
+                {
+                    var yaml = File.ReadAllText(path);
+                    var deserializer = new DeserializerBuilder()
+                        .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                        .Build();
+                    var data = deserializer.Deserialize<Dictionary<string, object>>(yaml);
+
+                    if (data != null)
+                    {
+                        var keys = string.Join(", ", data.Keys);
+                        MessageBox.Show($"Loaded hardware.yaml keys: {keys}", "YAML Loaded", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"hardware.yaml not found at: {path}", "YAML Missing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error reading hardware.yaml: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    }
+}

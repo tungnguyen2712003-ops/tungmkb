@@ -1,0 +1,283 @@
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
+
+namespace WinFormsApp1.Controls
+{
+    public class StylishButton : UserControl
+    {
+        private bool isHovered;
+        private bool isPressed;
+        private bool isDragging;
+        private Point dragStart;
+        private Color fillColor;
+
+        public StylishButton()
+        {
+            // optimized painting and transparent support
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            DoubleBuffered = true;
+            Height = 40;
+            Width = 120;
+            // keep control background transparent so rounded region shows parent's background in corners
+            BackColor = Color.Transparent;
+            fillColor = Color.FromArgb(30, 144, 255);
+            ForeColor = Color.White;
+            Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            OriginalWidth = Width;
+            ExpandedWidth = Width * 2;
+            ExpandOnHover = false;
+            IsDraggable = false;
+            Cursor = Cursors.Hand;
+
+            UpdateRegion();
+        }
+
+        [Category("Appearance")]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public string ButtonText { get; set; } = "Button";
+
+        [Category("Appearance")]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public Color FillColor
+        {
+            get => fillColor;
+            set { fillColor = value; Invalidate(); }
+        }
+
+        [Category("Behavior")]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public bool ExpandOnHover { get; set; }
+
+        [Category("Behavior")]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public int OriginalWidth { get; set; }
+
+        [Category("Behavior")]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public int ExpandedWidth { get; set; }
+
+        [Category("Behavior")]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public bool IsDraggable { get; set; }
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            // prevent default background painting to avoid square background showing through corners
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            // custom painting: top "wing" shape + rounded body
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            Color fill = fillColor;
+            if (isPressed) fill = ControlPaint.Dark(fill);
+            else if (isHovered) fill = ControlPaint.Light(fill);
+
+            int w = Width;
+            int h = Height;
+            int wingH = Math.Max(8, (int)(h * 0.28f));
+            int radius = Math.Max(6, Math.Min(Width, Height) / 6);
+
+            // build wing path (top decorative shape)
+            var wingPath = new GraphicsPath();
+            var wingPoints = new PointF[]
+            {
+                new PointF(0, wingH),
+                new PointF(w * 0.18f, wingH * 0.4f),
+                new PointF(w * 0.35f, wingH * 0.15f),
+                new PointF(w * 0.5f, 0),
+                new PointF(w * 0.65f, wingH * 0.15f),
+                new PointF(w * 0.82f, wingH * 0.4f),
+                new PointF(w, wingH),
+                new PointF(w, wingH + 4),
+                new PointF(0, wingH + 4)
+            };
+            wingPath.AddCurve(wingPoints);
+            wingPath.CloseFigure();
+
+            // main rounded body rectangle placed below the wing area (overlaps slightly)
+
+            var bodyRect = new Rectangle(0, wingH / 2, w - 1, h - wingH / 2 - 1);
+            using (var bodyPath = RoundedRect(bodyRect, radius))
+            using (var wingBrush = new SolidBrush(ControlPaint.Light(fill)))
+            using (var bodyBrush = new SolidBrush(fill))
+            using (var bodyPen = new Pen(ControlPaint.Dark(fill)))
+            {
+                // fill wing first (lighter)
+                e.Graphics.FillPath(wingBrush, wingPath);
+                // fill and stroke body
+                e.Graphics.FillPath(bodyBrush, bodyPath);
+                e.Graphics.DrawPath(bodyPen, bodyPath);
+            }
+
+            // draw centered text (project name) in the middle area of the control (slightly below center)
+            var textRect = new Rectangle(0, wingH / 2, w, h - wingH / 2);
+            TextRenderer.DrawText(e.Graphics, ButtonText, Font, textRect, ForeColor,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+        }
+
+        private GraphicsPath RoundedRect(Rectangle bounds, int radius)
+        {
+            var path = new GraphicsPath();
+            int diameter = radius * 2;
+            var arc = new Rectangle(bounds.Location, new Size(diameter, diameter));
+
+            // top left
+            path.AddArc(arc, 180, 90);
+            // top right
+            arc.X = bounds.Right - diameter;
+            path.AddArc(arc, 270, 90);
+            // bottom right
+            arc.Y = bounds.Bottom - diameter;
+            path.AddArc(arc, 0, 90);
+            // bottom left
+            arc.X = bounds.Left;
+            path.AddArc(arc, 90, 90);
+            path.CloseFigure();
+            return path;
+        }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            UpdateRegion();
+            Invalidate();
+        }
+
+        private void UpdateRegion()
+        {
+            try
+            {
+                int w = Width;
+                int h = Height;
+                int wingH = Math.Max(8, (int)(h * 0.28f));
+                int radius = Math.Max(6, Math.Min(Width, Height) / 6);
+
+                // create combined path for region: wing + body rounded rectangle
+
+                var total = new GraphicsPath();
+                var wingPoints = new PointF[]
+                {
+                    new PointF(0, wingH),
+                    new PointF(w * 0.18f, wingH * 0.4f),
+                    new PointF(w * 0.35f, wingH * 0.15f),
+                    new PointF(w * 0.5f, 0),
+                    new PointF(w * 0.65f, wingH * 0.15f),
+                    new PointF(w * 0.82f, wingH * 0.4f),
+                    new PointF(w, wingH),
+                    new PointF(w, wingH + 4),
+                    new PointF(0, wingH + 4)
+                };
+                var wingPath = new GraphicsPath();
+                wingPath.AddCurve(wingPoints);
+                wingPath.CloseFigure();
+
+                var bodyRect = new Rectangle(0, wingH / 2, w, h - wingH / 2);
+                using (var bodyPath = RoundedRect(bodyRect, radius))
+                {
+                    total.AddPath(wingPath, false);
+                    total.AddPath(bodyPath, false);
+                    this.Region = new Region(total);
+                }
+            }
+            catch { }
+        }
+
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            base.OnMouseEnter(e);
+            isHovered = true;
+            if (ExpandOnHover)
+            {
+                Width = ExpandedWidth;
+            }
+            Invalidate();
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            isHovered = false;
+            if (ExpandOnHover)
+            {
+                Width = OriginalWidth;
+            }
+            Invalidate();
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            if (e.Button == MouseButtons.Left)
+            {
+                isPressed = true;
+                if (IsDraggable)
+                {
+                    isDragging = true;
+                    dragStart = e.Location;
+                    Capture = true;
+                }
+            }
+            Invalidate();
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            if (isPressed && e.Button == MouseButtons.Left)
+            {
+                isPressed = false;
+                if (!isDragging)
+                {
+                    OnClick(EventArgs.Empty);
+                }
+            }
+
+            if (isDragging)
+            {
+                isDragging = false;
+                Capture = false;
+            }
+
+            Invalidate();
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            if (isDragging && IsDraggable)
+            {
+                var dx = e.X - dragStart.X;
+                var dy = e.Y - dragStart.Y;
+                var newLoc = new Point(Left + dx, Top + dy);
+                // keep inside parent bounds if possible
+                if (Parent != null)
+                {
+                    newLoc.X = Math.Max(0, Math.Min(newLoc.X, Parent.ClientSize.Width - Width));
+                    newLoc.Y = Math.Max(0, Math.Min(newLoc.Y, Parent.ClientSize.Height - Height));
+                }
+                Location = newLoc;
+            }
+        }
+
+        public void Expand()
+        {
+            Width = ExpandedWidth;
+        }
+
+        public void Collapse()
+        {
+            Width = OriginalWidth;
+        }
+    }
+}

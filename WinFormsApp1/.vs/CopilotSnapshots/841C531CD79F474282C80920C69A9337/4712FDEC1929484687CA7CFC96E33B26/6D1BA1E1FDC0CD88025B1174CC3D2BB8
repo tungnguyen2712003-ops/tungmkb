@@ -1,0 +1,61 @@
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+
+namespace WinFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // read hardware.yaml if it exists next to executable in specified path
+            var path = @"C:\Users\tungn\source\repos\WinFormsApp1\WinFormsApp1\hardware.yaml";
+            try
+            {
+                if (File.Exists(path))
+                {
+                    var yaml = File.ReadAllText(path);
+                    var deserializer = new DeserializerBuilder()
+                        .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                        .Build();
+                    var data = deserializer.Deserialize<Dictionary<string, object>>(yaml);
+                    if (data != null)
+                    {
+                        var keys = string.Join(", ", data.Keys);
+                        MessageBox.Show($"Loaded hardware.yaml keys: {keys}", "YAML Loaded", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"hardware.yaml not found at: {path}", "YAML Missing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error reading hardware.yaml: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            // add wing title bar on top and wire close/minimize handlers
+            var wing = new Controls.WingTitleBar()
+            {
+                Dock = DockStyle.Top,
+                TitleText = "Servo Control",
+                StartColor = System.Drawing.Color.FromArgb(135, 206, 250),
+                EndColor = System.Drawing.Color.FromArgb(30, 144, 255),
+                BorderColor = System.Drawing.Color.FromArgb(0, 120, 215),
+                BorderThickness = 3,
+            };
+            wing.CloseClicked += (s, e2) => this.Close();
+            wing.MinimizeClicked += (s, e2) => this.WindowState = FormWindowState.Minimized;
+            Controls.Add(wing);
+        }
+    }
+}

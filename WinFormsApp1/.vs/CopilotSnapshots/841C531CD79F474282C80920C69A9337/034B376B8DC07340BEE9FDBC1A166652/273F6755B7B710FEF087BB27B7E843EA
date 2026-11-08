@@ -1,0 +1,35 @@
+﻿using System;
+using System.Windows.Forms;
+using YamlDotNet.Serialization;
+using WinFormsApp1.Controls;
+
+namespace WinFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+private RoundedValueDisplay display;
+
+private void Form1_Load(object sender, EventArgs e)
+        {
+            // create demo control showing rounded value with Times New Roman
+            display = new RoundedValueDisplay()
+            {
+                Location = new System.Drawing.Point(20, 20),
+                CornerRadius = 10,
+                Value = 123.45,
+                ForeColor = System.Drawing.Color.FromArgb(30, 144, 255)
+            };
+            Controls.Add(display);
+
+// update value periodically to show changes
+            var t = new System.Windows.Forms.Timer() { Interval = 500 };
+            t.Tick += (s, e2) => { display.Value += 0.5; };
+            t.Start();
+        }
+    }
+}

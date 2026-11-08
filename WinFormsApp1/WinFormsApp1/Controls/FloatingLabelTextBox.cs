@@ -1,0 +1,77 @@
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace WinFormsApp1.Controls
+{
+    public class FloatingLabelTextBox : UserControl
+    {
+        private Label lbl;
+        private TextBox txt;
+
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [DefaultValue("")]
+        [Category("Appearance")]
+        [Description("The label text shown above the textbox when focused or has content.")]
+        public string FloatingText
+        {
+            get => lbl.Text;
+            set => lbl.Text = value;
+        }
+
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [DefaultValue("")]
+        [Category("Appearance")]
+        [Description("The inner text of the textbox.")]
+        public string TextValue
+        {
+            get => txt.Text;
+            set => txt.Text = value;
+        }
+
+        public FloatingLabelTextBox()
+        {
+            lbl = new Label()
+            {
+                ForeColor = Color.Gray,
+                AutoSize = true,
+                Location = new Point(3, 0),
+                Visible = true,
+                Font = new Font(Font.FontFamily, 8F)
+            };
+            txt = new TextBox()
+            {
+                Location = new Point(0, 18),
+                Width = 180
+            };
+            // keep events for visual feedback but label remains always visible
+            txt.GotFocus += (s, e) => UpdateLabel();
+            txt.LostFocus += (s, e) => UpdateLabel();
+            txt.TextChanged += (s, e) => UpdateLabel();
+
+            Controls.Add(lbl);
+            Controls.Add(txt);
+
+            Size = new Size(180, 44);
+        }
+
+        private void UpdateLabel()
+        {
+            // label stays visible; change color when textbox is focused
+            lbl.Visible = true;
+            lbl.ForeColor = txt.Focused ? Color.FromArgb(0, 120, 215) : Color.Gray;
+        }
+
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            lbl.Font = new Font(Font.FontFamily, 8);
+            txt.Font = Font;
+        }
+
+        public new void Focus() => txt.Focus();
+    }
+}

@@ -1,0 +1,99 @@
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+
+namespace WinFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            var path = @"C:\Users\tungn\source\repos\WinFormsApp1\WinFormsApp1\hardware.yaml";
+            try
+            {
+                if (!File.Exists(path))
+                {
+                    MessageBox.Show($"hardware.yaml not found at: {path}", "YAML Missing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var yaml = File.ReadAllText(path);
+                var deserializer = new DeserializerBuilder()
+                    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                    .Build();
+
+                var map = deserializer.Deserialize<Dictionary<string, AxisConfig>>(yaml);
+
+                AxisConfig axis1 = null;
+                if (map != null && map.ContainsKey("AxisX"))
+                {
+                    axis1 = map["AxisX"];
+                }
+                else if (map != null && map.Count > 0)
+                {
+                    axis1 = map.Values.FirstOrDefault();
+                }
+
+                if (axis1 != null)
+                {
+                    var info = $"Axis data:\n" +
+                               $"Card: {axis1.Card}\n" +
+                               $"Slave: {axis1.Slave}\n" +
+                               $"AxisId: {axis1.AxisId}\n" +
+                               $"Encoder: {axis1.Encoder}\n" +
+                               $"Lead: {axis1.Lead}\n" +
+                               $"Eqiv: {axis1.Eqiv}\n" +
+                               $"JogSpeed: {axis1.JogSpeed}\n" +
+                               $"HomeMethod: {axis1.HomeMethod}\n" +
+                               $"HomeLowSpeed: {axis1.HomeLowSpeed}\n" +
+                               $"HomeHighSpeed: {axis1.HomeHighSpeed}\n" +
+                               $"MinSpeed: {axis1.MinSpeed}\n" +
+                               $"MaxSpeed: {axis1.MaxSpeed}\n" +
+                               $"Acceleration: {axis1.Acceleration}\n" +
+                               $"Deceleration: {axis1.Deceleration}\n" +
+                               $"LimitNegative: {axis1.LimitNegative}\n" +
+                               $"LimitPositive: {axis1.LimitPositive}";
+
+                    MessageBox.Show(info, "AxisX", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("No axis data found in hardware.yaml", "YAML", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error reading hardware.yaml: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private class AxisConfig
+        {
+            public int Card { get; set; }
+            public int Slave { get; set; }
+            public int AxisId { get; set; }
+            public long Encoder { get; set; }
+            public int Lead { get; set; }
+            public int Eqiv { get; set; }
+            public int JogSpeed { get; set; }
+            public int HomeMethod { get; set; }
+            public int HomeLowSpeed { get; set; }
+            public int HomeHighSpeed { get; set; }
+            public int MinSpeed { get; set; }
+            public int MaxSpeed { get; set; }
+            public double Acceleration { get; set; }
+            public double Deceleration { get; set; }
+            public int LimitNegative { get; set; }
+            public int LimitPositive { get; set; }
+        }
+    }
+}

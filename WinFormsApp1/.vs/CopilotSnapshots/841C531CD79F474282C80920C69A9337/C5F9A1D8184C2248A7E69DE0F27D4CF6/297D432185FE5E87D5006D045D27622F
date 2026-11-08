@@ -1,0 +1,55 @@
+﻿using System;
+using System.Windows.Forms;
+
+namespace WinFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        private double[] positions = new double[3];
+        private bool[] autoRunning = new bool[3];
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // start timer
+            autoTimer.Start();
+
+            // Wire demo events
+            if (stylishButton1 != null) stylishButton1.Click += (s, ev) => AddAlarm("BTN01", "Stylish button clicked");
+            if (twoPositionSwitch1 != null) twoPositionSwitch1.Toggled += (s, ev) => AddAlarm("SW01", $"Switch: {twoPositionSwitch1.Position}");
+
+            // sample alarms
+            AddAlarm("E01", "Overtemperature");
+            AddAlarm("W02", "Near limit");
+        }
+
+
+        private void AddAlarm(string code, string message)
+        {
+            if (listAlarms == null) return;
+            var item = new ListViewItem(new[] { DateTime.Now.ToString("HH:mm:ss"), code, message });
+            listAlarms.Items.Add(item);
+        }
+
+        private void btnAck_Click(object sender, EventArgs e)
+        {
+            if (listAlarms == null) return;
+            if (listAlarms.SelectedItems.Count == 0) return;
+            foreach (ListViewItem it in listAlarms.SelectedItems)
+            {
+                it.BackColor = System.Drawing.Color.LightGray;
+                it.ForeColor = System.Drawing.Color.DarkGray;
+            }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            listAlarms?.Items.Clear();
+        }
+
+    }
+}

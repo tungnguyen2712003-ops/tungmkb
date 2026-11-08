@@ -1,0 +1,124 @@
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+
+namespace WinFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            // smoother painting
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+            DoubleBuffered = true;
+            this.Resize += (s, e) => Invalidate();
+            this.Paint += Form1_Paint;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // read hardware.yaml if it exists in specified path
+            var path = @"C:\Users\tungn\source\repos\WinFormsApp1\WinFormsApp1\hardware.yaml";
+            try
+            {
+                if (File.Exists(path))
+                {
+                    var yaml = File.ReadAllText(path);
+                    var deserializer = new DeserializerBuilder()
+                        .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                        .Build();
+                    var data = deserializer.Deserialize<Dictionary<string, object>>(yaml);
+
+                    if (data != null)
+                    {
+                        var keys = string.Join(", ", data.Keys);
+                        MessageBox.Show($"Loaded hardware.yaml keys: {keys}", "YAML Loaded", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else
+                {
+                    // no YAML found; continue
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error reading hardware.yaml: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // soft gradient background (light blue)
+            using (var bg = new LinearGradientBrush(this.ClientRectangle, Color.FromArgb(235, 245, 255), Color.FromArgb(220, 235, 250), LinearGradientMode.Vertical))
+            {
+                g.FillRectangle(bg, this.ClientRectangle);
+            }
+
+            int margin = 8;
+            int topBarHeight = 64;
+
+            // top bar
+            var topRect = new Rectangle(margin, margin, this.ClientSize.Width - margin * 2, topBarHeight);
+            using (var path = RoundedRect(topRect, 12))
+            using (var brush = new LinearGradientBrush(topRect, Color.FromArgb(70, 140, 210), Color.FromArgb(45, 115, 190), LinearGradientMode.Vertical))
+            using (var pen = new Pen(Color.FromArgb(30, 95, 165), 2))
+            {
+                g.FillPath(brush, path);
+                g.DrawPath(pen, path);
+            }
+
+            // centered tab shape on top bar
+            int tabWidth = Math.Min(420, this.ClientSize.Width / 2);
+            int tabHeight = topBarHeight - 18;
+            var tabRect = new Rectangle((this.ClientSize.Width - tabWidth) / 2, margin + 4, tabWidth, tabHeight);
+            using (var path = RoundedRect(tabRect, 12))
+            using (var brush = new LinearGradientBrush(tabRect, Color.FromArgb(100, 165, 230), Color.FromArgb(65, 135, 205), LinearGradientMode.Vertical))
+            using (var pen = new Pen(Color.FromArgb(30, 95, 165), 1))
+            {
+                g.FillPath(brush, path);
+                g.DrawPath(pen, path);
+            }
+
+            // bottom bar
+            int bottomH = 18;
+            var bottomRect = new Rectangle(margin, this.ClientSize.Height - bottomH - margin, this.ClientSize.Width - margin * 2, bottomH);
+            using (var path = RoundedRect(bottomRect, 8))
+            using (var brush = new LinearGradientBrush(bottomRect, Color.FromArgb(70, 140, 210), Color.FromArgb(45, 115, 190), LinearGradientMode.Vertical))
+            using (var pen = new Pen(Color.FromArgb(30, 95, 165), 2))
+            {
+                g.FillPath(brush, path);
+                g.DrawPath(pen, path);
+            }
+        }
+
+        private GraphicsPath RoundedRect(Rectangle bounds, int radius)
+        {
+            var path = new GraphicsPath();
+            int diameter = radius * 2;
+            var arc = new Rectangle(bounds.Location, new Size(diameter, diameter));
+
+            // top left
+            path.AddArc(arc, 180, 90);
+            // top right
+            arc.X = bounds.Right - diameter;
+            path.AddArc(arc, 270, 90);
+            // bottom right
+            arc.Y = bounds.Bottom - diameter;
+            path.AddArc(arc, 0, 90);
+            // bottom left
+            arc.X = bounds.Left;
+            path.AddArc(arc, 90, 90);
+            path.CloseFigure();
+            return path;
+        }
+    }
+}

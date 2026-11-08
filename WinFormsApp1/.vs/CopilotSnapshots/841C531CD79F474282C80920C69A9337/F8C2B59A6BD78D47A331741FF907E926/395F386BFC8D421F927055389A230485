@@ -1,0 +1,80 @@
+﻿namespace WinFormsApp1
+{
+    partial class Form1
+    {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        private System.Windows.Forms.Timer autoTimer;
+
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+            autoTimer = new System.Windows.Forms.Timer(components);
+            stylishButton1 = new WinFormsApp1.Controls.StylishButton();
+            twoPositionSwitch1 = new WinFormsApp1.Controls.TwoPositionSwitch();
+            SuspendLayout();
+            // 
+            // autoTimer
+            // 
+            autoTimer.Interval = 200;
+            // 
+            // stylishButton1
+            // 
+            stylishButton1.BackColor = Color.FromArgb(30, 144, 255);
+            stylishButton1.ButtonText = "Button";
+            stylishButton1.ExpandedWidth = 240;
+            stylishButton1.ExpandOnHover = false;
+            stylishButton1.Font = new Font("Segoe UI", 9F);
+            stylishButton1.ForeColor = Color.White;
+            stylishButton1.IsDraggable = false;
+            stylishButton1.Location = new Point(538, 66);
+            stylishButton1.Name = "stylishButton1";
+            stylishButton1.OriginalWidth = 120;
+            stylishButton1.Size = new Size(120, 40);
+            stylishButton1.TabIndex = 1;
+            // 
+            // twoPositionSwitch1
+            // 
+            twoPositionSwitch1.BackColor = Color.Transparent;
+            twoPositionSwitch1.Location = new Point(580, 135);
+            twoPositionSwitch1.Name = "twoPositionSwitch1";
+            twoPositionSwitch1.Size = new Size(60, 28);
+            twoPositionSwitch1.TabIndex = 0;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(twoPositionSwitch1);
+            Controls.Add(stylishButton1);
+            Name = "Form1";
+            Text = "Servo Control";
+            Load += Form1_Load;
+            ResumeLayout(false);
+        }
+
+        #endregion
+
+        private Controls.StylishButton stylishButton1;
+        private Controls.TwoPositionSwitch twoPositionSwitch1;
+    }
+}

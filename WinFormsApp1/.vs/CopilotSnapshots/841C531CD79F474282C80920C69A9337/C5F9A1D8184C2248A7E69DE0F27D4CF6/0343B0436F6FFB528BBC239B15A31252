@@ -1,0 +1,128 @@
+﻿namespace WinFormsApp1
+{
+    partial class Form1
+    {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        private System.Windows.Forms.Timer autoTimer;
+
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+            autoTimer = new System.Windows.Forms.Timer(components);
+            stylishButton1 = new WinFormsApp1.Controls.StylishButton();
+            twoPositionSwitch1 = new WinFormsApp1.Controls.TwoPositionSwitch();
+            listAlarms = new System.Windows.Forms.ListView();
+            chTime = new System.Windows.Forms.ColumnHeader();
+            chCode = new System.Windows.Forms.ColumnHeader();
+            chMessage = new System.Windows.Forms.ColumnHeader();
+            btnAck = new System.Windows.Forms.Button();
+            btnClear = new System.Windows.Forms.Button();
+            SuspendLayout();
+            // 
+            // autoTimer
+            // 
+            autoTimer.Interval = 200;
+            // 
+            // stylishButton1
+            // 
+            stylishButton1.BackColor = Color.Transparent;
+            stylishButton1.ButtonText = "Slide Out";
+            stylishButton1.ExpandedWidth = 240;
+            stylishButton1.ExpandOnHover = true;
+            stylishButton1.Font = new Font("Segoe UI", 9F);
+            stylishButton1.ForeColor = Color.White;
+            stylishButton1.IsDraggable = true;
+            stylishButton1.Location = new Point(300, 20);
+            stylishButton1.Name = "stylishButton1";
+            stylishButton1.OriginalWidth = 120;
+            stylishButton1.Size = new Size(120, 40);
+            stylishButton1.TabIndex = 1;
+            // 
+            // twoPositionSwitch1
+            // 
+            twoPositionSwitch1.BackColor = Color.Transparent;
+            twoPositionSwitch1.Location = new Point(300, 80);
+            twoPositionSwitch1.Name = "twoPositionSwitch1";
+            twoPositionSwitch1.Size = new Size(60, 28);
+            twoPositionSwitch1.TabIndex = 0;
+            // 
+            // listAlarms
+            // 
+            listAlarms.Location = new Point(300, 140);
+            listAlarms.Name = "listAlarms";
+            listAlarms.Size = new Size(480, 200);
+            listAlarms.View = System.Windows.Forms.View.Details;
+            listAlarms.FullRowSelect = true;
+            listAlarms.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { chTime, chCode, chMessage });
+            chTime.Text = "Time";
+            chTime.Width = 120;
+            chCode.Text = "Code";
+            chCode.Width = 80;
+            chMessage.Text = "Message";
+            chMessage.Width = 260;
+            // 
+            // btnAck
+            // 
+            btnAck.Location = new Point(300, 350);
+            btnAck.Name = "btnAck";
+            btnAck.Size = new Size(100, 25);
+            btnAck.Text = "Acknowledge";
+            btnAck.UseVisualStyleBackColor = true;
+            btnAck.Click += btnAck_Click;
+            // 
+            // btnClear
+            // 
+            btnClear.Location = new Point(410, 350);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new Size(75, 25);
+            btnClear.Text = "Clear";
+            btnClear.UseVisualStyleBackColor = true;
+            btnClear.Click += btnClear_Click;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(btnClear);
+            Controls.Add(btnAck);
+            Controls.Add(listAlarms);
+            Controls.Add(twoPositionSwitch1);
+            Controls.Add(stylishButton1);
+            Name = "Form1";
+            Text = "Servo Control";
+            Load += Form1_Load;
+            ResumeLayout(false);
+        }
+
+        #endregion
+
+        private Controls.StylishButton stylishButton1;
+        private Controls.TwoPositionSwitch twoPositionSwitch1;
+        private System.Windows.Forms.ListView listAlarms;
+        private System.Windows.Forms.ColumnHeader chTime;
+        private System.Windows.Forms.ColumnHeader chCode;
+        private System.Windows.Forms.ColumnHeader chMessage;
+        private System.Windows.Forms.Button btnAck;
+        private System.Windows.Forms.Button btnClear;
+    }
+}

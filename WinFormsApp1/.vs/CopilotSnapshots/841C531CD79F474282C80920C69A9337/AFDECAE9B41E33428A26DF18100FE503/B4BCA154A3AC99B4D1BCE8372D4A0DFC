@@ -1,0 +1,131 @@
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace WinFormsApp1.Controls
+{
+    public class FloatingLabelTextBox : UserControl
+    {
+        private Label lbl;
+        private TextBox txt;
+
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [DefaultValue("")]
+        [Category("Appearance")]
+        [Description("The label text shown above the textbox.")]
+        public string FloatingText
+        {
+            get => lbl.Text;
+            set { lbl.Text = value; DoLayout(); }
+        }
+
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [DefaultValue("")]
+        [Category("Appearance")]
+        [Description("The inner text of the textbox.")]
+        public string TextValue
+        {
+            get => txt.Text;
+            set => txt.Text = value;
+        }
+
+        [Browsable(true)]
+        [DefaultValue(true)]
+        [Category("Behavior")]
+        [Description("Whether the label is always visible above the textbox.")]
+        public bool LabelAlwaysVisible { get; set; } = true;
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public TextBox InnerTextBox => txt;
+
+        // Expose common textbox events through the control API so consumers can subscribe directly
+        public event EventHandler TextChanged
+        {
+            add => txt.TextChanged += value;
+            remove => txt.TextChanged -= value;
+        }
+
+        public event KeyPressEventHandler KeyPress
+        {
+            add => txt.KeyPress += value;
+            remove => txt.KeyPress -= value;
+        }
+
+        public event EventHandler Enter
+        {
+            add => txt.Enter += value;
+            remove => txt.Enter -= value;
+        }
+
+        public event EventHandler Leave
+        {
+            add => txt.Leave += value;
+            remove => txt.Leave -= value;
+        }
+
+        public FloatingLabelTextBox()
+        {
+            lbl = new Label()
+            {
+                ForeColor = Color.Gray,
+                AutoSize = true,
+                Location = new Point(3, 0),
+                Visible = true,
+                Font = new Font(Font.FontFamily, 8F)
+            };
+            txt = new TextBox()
+            {
+                Location = new Point(0, 18),
+                Width = 180
+            };
+
+            // visual feedback
+            txt.GotFocus += (s, e) => UpdateLabel();
+            txt.LostFocus += (s, e) => UpdateLabel();
+            txt.TextChanged += (s, e) => UpdateLabel();
+
+            Controls.Add(lbl);
+            Controls.Add(txt);
+
+            // layout and sizing
+            this.Padding = new Padding(2);
+            this.Size = new Size(180, 44);
+            this.Resize += (s, e) => DoLayout();
+            DoLayout();
+        }
+
+        private void DoLayout()
+        {
+            lbl.Location = new Point(this.Padding.Left, this.Padding.Top);
+            lbl.Font = new Font(this.Font.FontFamily, 8F);
+            txt.Location = new Point(this.Padding.Left, lbl.Bottom + 4);
+            txt.Width = Math.Max(20, this.ClientSize.Width - this.Padding.Left - this.Padding.Right);
+            this.Height = txt.Bottom + this.Padding.Bottom;
+        }
+
+        private void UpdateLabel()
+        {
+            lbl.Visible = LabelAlwaysVisible || txt.Focused || !string.IsNullOrEmpty(txt.Text);
+            lbl.ForeColor = txt.Focused ? Color.FromArgb(0, 120, 215) : Color.Gray;
+        }
+
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            DoLayout();
+        }
+
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            base.OnEnabledChanged(e);
+            txt.Enabled = this.Enabled;
+            UpdateLabel();
+        }
+
+        public new void Focus() => txt.Focus();
+    }
+}

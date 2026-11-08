@@ -1,0 +1,185 @@
+﻿using System;
+using System.Windows.Forms;
+
+namespace WinFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        private double[] positions = new double[3];
+        private bool[] autoRunning = new bool[3];
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // start timer
+            autoTimer.Start();
+            UpdateAllPositionLabels();
+        }
+
+        private void UpdatePositionLabel(int idx)
+        {
+            var text = $"Pos: {positions[idx]:0.0}";
+            if (idx == 0) lbl1Pos.Text = text;
+            else if (idx == 1) lbl2Pos.Text = text;
+            else if (idx == 2) lbl3Pos.Text = text;
+        }
+
+        private void UpdateAllPositionLabels()
+        {
+            for (int i = 0; i < 3; i++) UpdatePositionLabel(i);
+        }
+
+        // --- Servo 1 handlers ---
+        private void btn1JogMinus_Click(object sender, EventArgs e)
+        {
+            positions[0] -= 1.0;
+            UpdatePositionLabel(0);
+        }
+
+        private void btn1JogPlus_Click(object sender, EventArgs e)
+        {
+            positions[0] += 1.0;
+            UpdatePositionLabel(0);
+        }
+
+        private void btn1Move_Click(object sender, EventArgs e)
+        {
+            positions[0] = (double)num1Manual.Value;
+            UpdatePositionLabel(0);
+        }
+
+        private void btn1AutoStart_Click(object sender, EventArgs e)
+        {
+            autoRunning[0] = true;
+        }
+
+        private void btn1AutoStop_Click(object sender, EventArgs e)
+        {
+            autoRunning[0] = false;
+        }
+
+        private void radio1Mode_CheckedChanged(object sender, EventArgs e)
+        {
+            // enable/disable controls according to mode
+            bool manual = radio1Manual.Checked;
+            bool jog = radio1Jog.Checked;
+            bool auto = radio1Auto.Checked;
+
+            num1Manual.Enabled = manual;
+            btn1Move.Enabled = manual;
+
+            btn1JogMinus.Enabled = jog;
+            btn1JogPlus.Enabled = jog;
+
+            btn1AutoStart.Enabled = auto;
+            btn1AutoStop.Enabled = auto;
+        }
+
+        // --- Servo 2 handlers ---
+        private void btn2JogMinus_Click(object sender, EventArgs e)
+        {
+            positions[1] -= 1.0;
+            UpdatePositionLabel(1);
+        }
+
+        private void btn2JogPlus_Click(object sender, EventArgs e)
+        {
+            positions[1] += 1.0;
+            UpdatePositionLabel(1);
+        }
+
+        private void btn2Move_Click(object sender, EventArgs e)
+        {
+            positions[1] = (double)num2Manual.Value;
+            UpdatePositionLabel(1);
+        }
+
+        private void btn2AutoStart_Click(object sender, EventArgs e)
+        {
+            autoRunning[1] = true;
+        }
+
+        private void btn2AutoStop_Click(object sender, EventArgs e)
+        {
+            autoRunning[1] = false;
+        }
+
+        private void radio2Mode_CheckedChanged(object sender, EventArgs e)
+        {
+            bool manual = radio2Manual.Checked;
+            bool jog = radio2Jog.Checked;
+            bool auto = radio2Auto.Checked;
+
+            num2Manual.Enabled = manual;
+            btn2Move.Enabled = manual;
+
+            btn2JogMinus.Enabled = jog;
+            btn2JogPlus.Enabled = jog;
+
+            btn2AutoStart.Enabled = auto;
+            btn2AutoStop.Enabled = auto;
+        }
+
+        // --- Servo 3 handlers ---
+        private void btn3JogMinus_Click(object sender, EventArgs e)
+        {
+            positions[2] -= 1.0;
+            UpdatePositionLabel(2);
+        }
+
+        private void btn3JogPlus_Click(object sender, EventArgs e)
+        {
+            positions[2] += 1.0;
+            UpdatePositionLabel(2);
+        }
+
+        private void btn3Move_Click(object sender, EventArgs e)
+        {
+            positions[2] = (double)num3Manual.Value;
+            UpdatePositionLabel(2);
+        }
+
+        private void btn3AutoStart_Click(object sender, EventArgs e)
+        {
+            autoRunning[2] = true;
+        }
+
+        private void btn3AutoStop_Click(object sender, EventArgs e)
+        {
+            autoRunning[2] = false;
+        }
+
+        private void radio3Mode_CheckedChanged(object sender, EventArgs e)
+        {
+            bool manual = radio3Manual.Checked;
+            bool jog = radio3Jog.Checked;
+            bool auto = radio3Auto.Checked;
+
+            num3Manual.Enabled = manual;
+            btn3Move.Enabled = manual;
+
+            btn3JogMinus.Enabled = jog;
+            btn3JogPlus.Enabled = jog;
+
+            btn3AutoStart.Enabled = auto;
+            btn3AutoStop.Enabled = auto;
+        }
+
+        private void autoTimer_Tick(object sender, EventArgs e)
+        {
+            // simple demo: when autoRunning is true, increment position
+            for (int i = 0; i < 3; i++)
+            {
+                if (autoRunning[i])
+                {
+                    positions[i] += 0.5; // increment
+                    UpdatePositionLabel(i);
+                }
+            }
+        }
+    }
+}

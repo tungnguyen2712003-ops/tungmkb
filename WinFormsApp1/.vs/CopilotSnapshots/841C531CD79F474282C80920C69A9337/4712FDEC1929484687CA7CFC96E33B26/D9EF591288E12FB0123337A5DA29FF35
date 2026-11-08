@@ -1,0 +1,187 @@
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
+
+namespace WinFormsApp1.Controls
+{
+    public class WingTitleBar : UserControl
+    {
+        private string titleText = "Application";
+        private Color borderColor = Color.FromArgb(0, 120, 215);
+        private int borderThickness = 3;
+        private Color startColor = Color.LightSkyBlue;
+        private Color endColor = Color.FromArgb(30, 144, 255);
+        private Rectangle closeRect;
+        private Rectangle minimizeRect;
+
+        [Browsable(true)]
+        [Category("Appearance")]
+        public string TitleText
+        {
+            get => titleText;
+            set { titleText = value; Invalidate(); }
+        }
+
+        [Browsable(true)]
+        [Category("Appearance")]
+        public Color BorderColor
+        {
+            get => borderColor;
+            set { borderColor = value; Invalidate(); }
+        }
+
+        [Browsable(true)]
+        [Category("Appearance")]
+        [DefaultValue(3)]
+        public int BorderThickness
+        {
+            get => borderThickness;
+            set { borderThickness = Math.Max(1, value); Invalidate(); }
+        }
+
+        [Browsable(true)]
+        [Category("Appearance")]
+        public Color StartColor
+        {
+            get => startColor;
+            set { startColor = value; Invalidate(); }
+        }
+
+        [Browsable(true)]
+        [Category("Appearance")]
+        public Color EndColor
+        {
+            get => endColor;
+            set { endColor = value; Invalidate(); }
+        }
+
+        public event EventHandler CloseClicked;
+        public event EventHandler MinimizeClicked;
+
+        private bool mouseDown;
+        private Point mouseDownLocation;
+
+        public WingTitleBar()
+        {
+            DoubleBuffered = true;
+            Height = 48;
+            Dock = DockStyle.Top;
+            Cursor = Cursors.Default;
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            var bounds = ClientRectangle;
+            // draw wing-like rounded top background with gradient
+            using (var path = CreateWingPath(bounds))
+            using (var brush = new LinearGradientBrush(bounds, startColor, endColor, 90F))
+            {
+                e.Graphics.FillPath(brush, path);
+            }
+
+            // draw bottom soft border
+            using (var pen = new Pen(borderColor, borderThickness))
+            {
+                pen.Alignment = PenAlignment.Center;
+                var y = bounds.Bottom - borderThickness / 2;
+                e.Graphics.DrawLine(pen, bounds.Left + 8, y, bounds.Right - 8, y);
+            }
+
+            // draw title text
+            var textRect = new Rectangle(12, 0, bounds.Width - 80, bounds.Height);
+            TextRenderer.DrawText(e.Graphics, titleText, new Font(Font.FontFamily, 12F, FontStyle.Regular), textRect, Color.White, TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
+
+            // draw simple minimize and close icons on right
+            int iconSize = 14;
+            int padding = 12;
+            closeRect = new Rectangle(bounds.Right - padding - iconSize, (bounds.Height - iconSize) / 2, iconSize, iconSize);
+            minimizeRect = new Rectangle(closeRect.Left - 8 - iconSize, (bounds.Height - iconSize) / 2, iconSize, iconSize);
+
+            DrawMinimizeIcon(e.Graphics, minimizeRect);
+            DrawCloseIcon(e.Graphics, closeRect);
+        }
+
+        private GraphicsPath CreateWingPath(Rectangle bounds)
+        {
+            int h = bounds.Height + 10; // pull wings slightly up
+            var rect = new Rectangle(bounds.Left - 30, bounds.Top - 10, bounds.Width + 60, h);
+            var path = new GraphicsPath();
+            path.AddEllipse(rect);
+            // clip to top area
+            var regionRect = new Rectangle(bounds.Left, bounds.Top, bounds.Width, bounds.Height + 2);
+            using (var r = new Region(regionRect))
+            {
+                path.Intersect(r);
+            }
+            return path;
+        }
+
+        private void DrawCloseIcon(Graphics g, Rectangle r)
+        {
+            using (var pen = new Pen(Color.White, 1.6f))
+            {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.DrawLine(pen, r.Left, r.Top, r.Right, r.Bottom);
+                g.DrawLine(pen, r.Right, r.Top, r.Left, r.Bottom);
+            }
+        }
+
+        private void DrawMinimizeIcon(Graphics g, Rectangle r)
+        {
+            using (var pen = new Pen(Color.White, 1.8f))
+            {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.DrawLine(pen, r.Left, r.Bottom, r.Right, r.Bottom);
+            }
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            if (closeRect.Contains(e.Location)) return;
+            if (minimizeRect.Contains(e.Location)) return;
+
+            mouseDown = true;
+            mouseDownLocation = e.Location;
+            this.Capture = true;
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            this.Capture = false;
+            mouseDown = false;
+
+            if (closeRect.Contains(e.Location))
+            {
+                CloseClicked?.Invoke(this, EventArgs.Empty);
+            }
+            else if (minimizeRect.Contains(e.Location))
+            {
+                MinimizeClicked?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            if (mouseDown && ParentForm != null)
+            {
+                var dx = e.X - mouseDownLocation.X;
+                var dy = e.Y - mouseDownLocation.Y;
+                ParentForm.Location = new Point(ParentForm.Location.X + dx, ParentForm.Location.Y + dy);
+            }
+        }
+
+        // allow changing border color smoothly via API
+        public void SetBottomBorderColor(Color color)
+        {
+            BorderColor = color;
+        }
+    }
+}

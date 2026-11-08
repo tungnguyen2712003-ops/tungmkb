@@ -1,0 +1,87 @@
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace WinFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        private Point titleDragStart;
+        private bool draggingTitle;
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // wire title bar events in case designer didn't
+            if (titleBarPanel != null)
+            {
+                titleBarPanel.MouseMove += titleBarPanel_MouseMove;
+                titleBarPanel.MouseUp += titleBarPanel_MouseUp;
+            }
+        }
+
+        private void titleBarPanel_Paint(object sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            // deep blue background
+            using (var brush = new SolidBrush(Color.FromArgb(8, 36, 84)))
+            {
+                g.FillRectangle(brush, titleBarPanel.ClientRectangle);
+            }
+
+            // decorative pattern: -\\______/----
+            using (var pen = new Pen(Color.FromArgb(160, 200, 255), 2))
+            {
+                int y = titleBarPanel.Height / 2;
+                int x = 12;
+                g.DrawLine(pen, x, y, x + 20, y); x += 26;
+                g.DrawLine(pen, x, y - 6, x + 8, y + 6);
+                g.DrawLine(pen, x + 8, y - 6, x + 16, y + 6); x += 22;
+                g.DrawLine(pen, x, y + 8, x + 90, y + 8); x += 96;
+                g.DrawLine(pen, x, y, x + 40, y);
+            }
+
+            // title centered
+            var title = this.Text;
+            using (var sf = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+            using (var brush = new SolidBrush(Color.White))
+            using (var font = new Font("Segoe UI", 11F, FontStyle.Bold))
+            {
+                g.DrawString(title, font, brush, titleBarPanel.ClientRectangle, sf);
+            }
+        }
+
+        private void titleBarPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                draggingTitle = true;
+                titleDragStart = e.Location;
+                titleBarPanel.Capture = true;
+            }
+        }
+
+        private void titleBarPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (draggingTitle && e.Button == MouseButtons.Left)
+            {
+                var screen = titleBarPanel.PointToScreen(e.Location);
+                this.Location = new Point(screen.X - titleDragStart.X, screen.Y - titleDragStart.Y);
+            }
+        }
+
+        private void titleBarPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (draggingTitle && e.Button == MouseButtons.Left)
+            {
+                draggingTitle = false;
+                titleBarPanel.Capture = false;
+            }
+        }
+    }
+}

@@ -1,0 +1,44 @@
+﻿using System;
+using System.Windows.Forms;
+
+namespace WinFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        private double[] positions = new double[3];
+        private bool[] autoRunning = new bool[3];
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // create switch and floating textbox demo
+            var toggle = new Controls.ToggleSwitch()
+            {
+                Location = new System.Drawing.Point(20, 20),
+            };
+            var fld = new Controls.FloatingLabelTextBox()
+            {
+                Location = new System.Drawing.Point(20, 60),
+                FloatingText = "Device ID",
+                TextValue = "",
+            };
+
+            // when toggled on, enable textbox; otherwise disable and clear
+            toggle.ToggleChanged += (s, e2) =>
+            {
+                fld.Enabled = toggle.Checked;
+                if (!toggle.Checked)
+                    fld.TextValue = string.Empty;
+            };
+
+            Controls.Add(toggle);
+            Controls.Add(fld);
+        }
+
+
+    }
+}

@@ -1,0 +1,23 @@
+Ethercat:
+  Card:0
+  Slave:0
+AxisX:
+  Card:0
+  Slave:0
+  AxisId:0
+  Encoder:8388608
+  Lead:0
+  Eqiv:0
+  JogSpeed:0
+  HomeMethod:0
+  HomeLowSpeed:0
+  HomeHighSpeed:0
+  MinSpeed:0
+  MaxSpeed:1000
+  Acceleration:0.2
+  Deceleration:0.2
+  LimitNegative:0
+  LimitPositive:0
+
+
+
